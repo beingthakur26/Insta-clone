@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "../profile.scss";
+import api from "../../../utils/api";
 
 const Profile = () => {
 
@@ -16,8 +16,8 @@ const Profile = () => {
   const [newImage, setNewImage] = useState(null);
 
   const fetchAll = async () => {
-    const profile = await axios.get(
-      "http://localhost:3000/api/auth/get-me",
+    const profile = await api.get(
+      "/auth/get-me",
       { withCredentials: true }
     );
 
@@ -25,22 +25,22 @@ const Profile = () => {
     setNewUsername(profile.data.user);
     setNewBio(profile.data.bio || "");
 
-    const reqRes = await axios.get(
-      "http://localhost:3000/api/users/requests",
+    const reqRes = await api.get(
+      "/users/requests",
       { withCredentials: true }
     );
 
     setRequests(reqRes.data.requests);
 
-    const followingRes = await axios.get(
-      "http://localhost:3000/api/users/following",
+    const followingRes = await api.get(
+      "/users/following",
       { withCredentials: true }
     );
 
     setFollowing(followingRes.data.following);
 
-    const suggestedRes = await axios.get(
-      "http://localhost:3000/api/users/suggested",
+    const suggestedRes = await api.get(
+      "/users/suggested",
       { withCredentials: true }
     );
 
@@ -54,32 +54,32 @@ const Profile = () => {
   const handleAction = async (type, username) => {
 
     if (type === "accept") {
-      await axios.patch(
-        `http://localhost:3000/api/users/follow/status/${username}`,
+      await api.patch(
+        `/users/follow/status/${username}`,
         { status: "accepted" },
         { withCredentials: true }
       );
     }
 
     if (type === "reject") {
-      await axios.patch(
-        `http://localhost:3000/api/users/follow/status/${username}`,
+      await api.patch(
+        `/users/follow/status/${username}`,
         { status: "rejected" },
         { withCredentials: true }
       );
     }
 
     if (type === "unfollow") {
-      await axios.post(
-        `http://localhost:3000/api/users/unfollow/${username}`,
+      await api.post(
+        `/users/unfollow/${username}`,
         {},
         { withCredentials: true }
       );
     }
 
     if (type === "follow") {
-      await axios.post(
-        `http://localhost:3000/api/users/follow/${username}`,
+      await api.post(
+        `/users/follow/${username}`,
         {},
         { withCredentials: true }
       );
@@ -94,8 +94,8 @@ const Profile = () => {
     formData.append("bio", newBio);
     if (newImage) formData.append("profileImage", newImage);
 
-    await axios.patch(
-      "http://localhost:3000/api/users/update-profile",
+    await api.patch(
+      "/users/update-profile",
       formData,
       { withCredentials: true }
     );

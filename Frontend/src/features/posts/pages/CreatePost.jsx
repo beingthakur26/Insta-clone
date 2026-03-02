@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../style/createPost.scss";
+import api from "../../../utils/api";
 
 const CreatePost = () => {
 
@@ -9,6 +9,7 @@ const CreatePost = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -36,8 +37,8 @@ const CreatePost = () => {
         formData.append("caption", caption);
         formData.append("imgUrl", image); // MUST match backend
 
-      await axios.post(
-        "http://localhost:3000/api/posts/create",
+      await api.post(
+        "/posts/create",
         formData,
         {
           withCredentials: true,

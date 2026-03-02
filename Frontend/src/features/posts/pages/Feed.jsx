@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Post from "../components/Post";
 import "../style/feed.scss";
+import api from "../../../utils/api";
 
 const Feed = () => {
 
@@ -11,8 +11,8 @@ const Feed = () => {
   const fetchFeed = async () => {
     try {
 
-      const res = await axios.get(
-        "http://localhost:3000/api/posts/feed",
+      const res = await api.get(
+        "/posts/feed",
         { withCredentials: true }
       );
 

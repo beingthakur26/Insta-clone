@@ -102,11 +102,16 @@ const loginController = async (req, res) => {
         // 🔹 Store token inside cookie
         // WHY added options?
         // Because without them logout and CORS may not work properly
+        // res.cookie("token", token, {
+        //     httpOnly: true,   // prevents JS from accessing token (security)
+        //     sameSite: "lax",  // allows frontend (5173) to talk to backend (3000)
+        //     secure: false     // must be false for localhost (true only in HTTPS)
+        // })
         res.cookie("token", token, {
-            httpOnly: true,   // prevents JS from accessing token (security)
-            sameSite: "lax",  // allows frontend (5173) to talk to backend (3000)
-            secure: false     // must be false for localhost (true only in HTTPS)
-        })
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", 
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        });
 
         // 🔹 Send user details (without password)
         res.status(200).json({

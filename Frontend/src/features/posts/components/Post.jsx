@@ -1,6 +1,6 @@
 import React from "react";
-import axios from "axios";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import api from "../../../utils/api";
 
 const Post = ({ post, setPosts }) => {
 
@@ -8,16 +8,9 @@ const Post = ({ post, setPosts }) => {
     try {
 
       if (post.isLiked) {
-        await axios.delete(
-          `http://localhost:3000/api/posts/unlike/${post._id}`,
-          { withCredentials: true }
-        );
+        await api.delete(`/posts/unlike/${post._id}`)
       } else {
-        await axios.post(
-          `http://localhost:3000/api/posts/like/${post._id}`,
-          {},
-          { withCredentials: true }
-        );
+        await api.post(`/posts/like/${post._id}`)
       }
 
       // 🔥 Update only this post in feed state

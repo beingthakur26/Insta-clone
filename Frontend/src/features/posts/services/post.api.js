@@ -1,7 +1,7 @@
 import axios from "axios"; // ✅ fixed typo
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://insta-clone-cz4o.onrender.com/",
   withCredentials: true,
 });
 

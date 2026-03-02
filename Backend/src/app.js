@@ -12,8 +12,15 @@ app.use(cookies())
 
 // Enable CORS for all routes (allows frontend to communicate with backend)
 
+// app.use(cors({
+//   origin: "http://localhost:5173",
+//   credentials: true
+// }));
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",  // local frontend
+    // "https://your-frontend-domain.com" // replace later when deployed
+  ],
   credentials: true
 }));
 

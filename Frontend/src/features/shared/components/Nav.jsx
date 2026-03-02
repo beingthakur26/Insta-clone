@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../nav.scss";
+import api from "../../../utils/api";
 
 const Nav = () => {
 
@@ -12,8 +12,8 @@ const Nav = () => {
   // 🔹 Check login status when Nav loads
   const checkAuth = async () => {
     try {
-      await axios.get(
-        "http://localhost:3000/api/auth/get-me",
+      await api.get(
+        "/auth/get-me",
         { withCredentials: true }
       );
       setIsLoggedIn(true);  // token valid
@@ -28,8 +28,8 @@ const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:3000/api/auth/logout",
+      await api.post(
+        "/auth/logout",
         {},
         { withCredentials: true }
       );
