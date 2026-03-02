@@ -19,7 +19,7 @@ app.use(cookies())
 app.use(cors({
   origin: [
     "http://localhost:5173",  // local frontend
-    // "https://your-frontend-domain.com" // replace later when deployed
+    "https://insta-clone-frontend-ov6o.onrender.com/" // replace later when deployed
   ],
   credentials: true
 }));
