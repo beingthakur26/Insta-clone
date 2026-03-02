@@ -16,8 +16,13 @@ app.use(cors({
     "http://localhost:5173",
     "https://insta-clone-frontend-ov60.onrender.com"
   ],
-  credentials: true
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// Important for preflight
+app.options("*", cors());
 
 /* requiring routes */
 const authRouter = require('./routes/auth.route')
