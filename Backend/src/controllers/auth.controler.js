@@ -147,13 +147,13 @@ const loginController = async (req, res) => {
         })
 
     } catch (error) {
+        console.error("Login error FULL:", error);
+        console.error("Stack:", error.stack);
 
-        // 🔹 Prevents server crash if something unexpected happens
-        console.error("Login error:", error)
-
-        res.status(500).json({
-            message: "Something went wrong"
-        })
+        return res.status(500).json({
+            message: error.message,
+            stack: error.stack
+        });
     }
 }
 
