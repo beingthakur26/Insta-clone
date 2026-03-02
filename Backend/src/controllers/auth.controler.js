@@ -58,10 +58,16 @@ const registerController = async (req, res) => {
     );
 
     // 🔹 Set cookie (works in production + localhost)
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    // });
+
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        httpOnly: true,
+        secure: true,        // REQUIRED for HTTPS
+        sameSite: "none"     // REQUIRED for cross-domain
     });
 
     // 🔹 Send response (never send password)
@@ -131,10 +137,16 @@ const loginController = async (req, res) => {
             { expiresIn: "1d" } // token valid for 1 day
         )
 
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === "production",
+        //     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        // });
+
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+            secure: true,        // REQUIRED for HTTPS
+            sameSite: "none"     // REQUIRED for cross-domain
         });
 
         // 🔹 Send user details (without password)
