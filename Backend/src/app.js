@@ -21,9 +21,6 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Important for preflight
-app.options("*", cors());
-
 /* requiring routes */
 const authRouter = require('./routes/auth.route')
 const postRouter = require('./routes/post.route')
