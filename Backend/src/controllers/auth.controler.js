@@ -107,10 +107,15 @@ const loginController = async (req, res) => {
         //     sameSite: "lax",  // allows frontend (5173) to talk to backend (3000)
         //     secure: false     // must be false for localhost (true only in HTTPS)
         // })
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === "production", 
+        //     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        // });
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", 
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+            secure: true,
+            sameSite: "none"
         });
 
         // 🔹 Send user details (without password)
