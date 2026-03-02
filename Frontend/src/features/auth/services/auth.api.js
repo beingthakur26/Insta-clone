@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://insta-clone-cz4o.onrender.com/api/auth",
+  baseURL: "http://localhost:3000/api/auth",
   withCredentials: true
 });
 
 // Register
 export const register = async (username, email, password) => {
   const response = await api.post("/register", {
-    username,   // FIXED
+    user: username,   // 🔥 MUST match backend field
     email,
     password
   });

@@ -5,7 +5,7 @@ import { usePost } from "../hook/usePost";
 
 const Feed = () => {
 
-  const { feed, handleGetFeed, loading, setFeed } = usePost();
+  const { feed, handleGetFeed, loading } = usePost();
 
   useEffect(() => {
     handleGetFeed();
@@ -29,7 +29,6 @@ const Feed = () => {
             <Post
               key={post._id}
               post={post}
-              setPosts={setFeed}   // ✅ same logic, but context now
             />
           ))
         )}

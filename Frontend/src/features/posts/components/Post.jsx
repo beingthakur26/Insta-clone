@@ -1,30 +1,13 @@
 import React from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import api from "../../../utils/api";
+import { usePost } from "../hook/usePost";
 
-const Post = ({ post, setPosts }) => {
+const Post = ({ post }) => {
 
-  const handleLikeToggle = async () => {
-    try {
+  const { handleLikeToggle } = usePost();
 
-      if (post.isLiked) {
-        await api.delete(`/posts/unlike/${post._id}`)
-      } else {
-        await api.post(`/posts/like/${post._id}`)
-      }
-
-      // 🔥 Update only this post in feed state
-      setPosts(prev =>
-        prev.map(p =>
-          p._id === post._id
-            ? { ...p, isLiked: !p.isLiked }
-            : p
-        )
-      );
-
-    } catch (error) {
-      console.error("Like toggle error:", error.response?.data || error.message);
-    }
+  const handleLike = () => {
+    handleLikeToggle(post._id, post.isLiked);
   };
 
   return (
@@ -58,7 +41,7 @@ const Post = ({ post, setPosts }) => {
         <div className="left">
 
           <button
-            onClick={handleLikeToggle}
+            onClick={handleLike}
             className={`like ${post.isLiked ? "active" : ""}`}
           >
             {post.isLiked ? <FaHeart /> : <FaRegHeart />}

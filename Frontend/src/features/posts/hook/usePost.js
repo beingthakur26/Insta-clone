@@ -1,9 +1,13 @@
-import { getFeed } from "../services/post.api";
 import { useContext } from "react";
 import { PostContext } from "../post.context";
+import {
+  getFeed,
+  createPost,
+  likePost,
+  unlikePost,
+} from "../services/post.api";
 
 export const usePost = () => {
-
   const context = useContext(PostContext);
 
   if (!context) {
@@ -17,13 +21,34 @@ export const usePost = () => {
     try {
       const data = await getFeed();
       setFeed(data.posts);
-      return data; // ✅ return like auth
-    } catch (error) {
-      console.error("Error fetching feed:", error);
-      throw error;
+      return data;
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCreatePost = async (formData) => {
+    setLoading(true);
+    try {
+      const data = await createPost(formData);
+      return data;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLikeToggle = async (postId, isLiked) => {
+    if (isLiked) {
+      await unlikePost(postId);
+    } else {
+      await likePost(postId);
+    }
+
+    setFeed(prev =>
+      prev.map(p =>
+        p._id === postId ? { ...p, isLiked: !isLiked } : p
+      )
+    );
   };
 
   return {
@@ -32,6 +57,8 @@ export const usePost = () => {
     setPost,
     feed,
     setFeed,
-    handleGetFeed
+    handleGetFeed,
+    handleCreatePost,
+    handleLikeToggle,
   };
 };

@@ -17,19 +17,6 @@ const RegistrationForm = () => {
     return <div>Loading...</div>;
   }
 
-  // const handleFormSubmit = async (e) => {
-  //   e.preventDefault(); // stop page reload
-  //   await handleRegister(username, email, password)
-  //     .then((res) => {
-  //       navigate("/feed");
-  //       // Registration successful, you can redirect the user or show a success message
-  //       console.log("Registration successful", res);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Registration failed:", error);
-  //     });
-  // };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 

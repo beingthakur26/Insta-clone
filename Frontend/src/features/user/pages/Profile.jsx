@@ -1,76 +1,44 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from "react";
-import "../profile.scss";
-import api from "../../../utils/api";
-import { useAuth } from "../../auth/hooks/useAuth";
+import "../style/profile.scss";
+import { useUser } from "../hook/useUser";
 
 const Profile = () => {
 
-  const { user } = useAuth();
+  const {
+    userData,
+    requests,
+    following,
+    suggested,
+    fetchAll,
+    handleAction,
+    handleUpdateProfile,
+  } = useUser();
 
-  const [userData, setUserData] = useState(null);
-  const [requests, setRequests] = useState([]);
-  const [following, setFollowing] = useState([]);
-  const [suggested, setSuggested] = useState([]);
   const [editMode, setEditMode] = useState(false);
-
   const [newUsername, setNewUsername] = useState("");
   const [newBio, setNewBio] = useState("");
   const [newImage, setNewImage] = useState(null);
 
-  const fetchAll = async () => {
-
-    if (!user) return;
-
-    setUserData(user);
-    setNewUsername(user.user);
-    setNewBio(user.bio || "");
-
-    const reqRes = await api.get("/users/requests");
-    setRequests(reqRes.data.requests);
-
-    const followingRes = await api.get("/users/following");
-    setFollowing(followingRes.data.following);
-
-    const suggestedRes = await api.get("/users/suggested");
-    setSuggested(suggestedRes.data.users);
-  };
-
   useEffect(() => {
     fetchAll();
-  }, [user]);
+  }, []);
 
-  const handleAction = async (type, username) => {
-
-    if (type === "accept") {
-      await api.patch(`/users/follow/status/${username}`, { status: "accepted" });
+  useEffect(() => {
+    if (userData) {
+      setNewUsername(userData.user);
+      setNewBio(userData.bio || "");
     }
+  }, [userData]);
 
-    if (type === "reject") {
-      await api.patch(`/users/follow/status/${username}`, { status: "rejected" });
-    }
-
-    if (type === "unfollow") {
-      await api.post(`/users/unfollow/${username}`);
-    }
-
-    if (type === "follow") {
-      await api.post(`/users/follow/${username}`);
-    }
-
-    fetchAll();
-  };
-
-  const handleUpdateProfile = async () => {
+  const handleSave = async () => {
     const formData = new FormData();
     formData.append("user", newUsername);
     formData.append("bio", newBio);
     if (newImage) formData.append("profileImage", newImage);
 
-    await api.patch("/users/update-profile", formData);
-
+    await handleUpdateProfile(formData);
     setEditMode(false);
-    fetchAll();
   };
 
   if (!userData) return <div className="profile-loading">Loading...</div>;
@@ -79,11 +47,12 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-grid">
 
+        {/* LEFT SIDE */}
         <div className="profile-card">
 
           <div className="profile-image-wrapper">
             <img
-              src={userData.profileImage}
+              src={userData.profileImage || "https://via.placeholder.com/150"}
               alt="profile"
               className="profile-image"
             />
@@ -103,7 +72,7 @@ const Profile = () => {
                 type="file"
                 onChange={(e) => setNewImage(e.target.files[0])}
               />
-              <button onClick={handleUpdateProfile}>
+              <button onClick={handleSave}>
                 Save Changes
               </button>
             </>
@@ -116,9 +85,9 @@ const Profile = () => {
               </button>
             </>
           )}
-
         </div>
 
+        {/* RIGHT SIDE */}
         <div className="profile-sidebar">
 
           <Section

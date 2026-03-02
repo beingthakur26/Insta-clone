@@ -1,14 +1,13 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import "../nav.scss";
+import "./nav.scss";
 import { useAuth } from "../../auth/hooks/useAuth";
-const Nav = () => {
 
+const Nav = () => {
   const navigate = useNavigate();
   const { user, handleLogout } = useAuth();
 
-  const isLoggedIn = !!user;
+  const isLoggedIn = Boolean(user);
 
   const logoutAndRedirect = async () => {
     try {
@@ -22,12 +21,14 @@ const Nav = () => {
   return (
     <nav className="navbar">
 
+      {/* LEFT */}
       <div className="nav-left">
         <h2 className="logo" onClick={() => navigate("/feed")}>
           InstaClone
         </h2>
       </div>
 
+      {/* CENTER */}
       <div className="nav-center">
         {isLoggedIn && (
           <>
@@ -46,6 +47,7 @@ const Nav = () => {
         )}
       </div>
 
+      {/* RIGHT */}
       <div className="nav-right">
         {isLoggedIn ? (
           <button onClick={logoutAndRedirect} className="logout-btn">
@@ -53,10 +55,17 @@ const Nav = () => {
           </button>
         ) : (
           <>
-            <button onClick={() => navigate("/")} className="logout-btn">
+            <button
+              onClick={() => navigate("/")}
+              className="logout-btn"
+            >
               Login
             </button>
-            <button onClick={() => navigate("/register")} className="logout-btn">
+
+            <button
+              onClick={() => navigate("/register")}
+              className="logout-btn"
+            >
               Signup
             </button>
           </>

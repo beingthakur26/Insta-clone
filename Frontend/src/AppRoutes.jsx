@@ -4,7 +4,7 @@ import RegistrationForm from './features/auth/pages/RegistrationForm'
 import Feed from './features/posts/pages/Feed'
 import CreatePost from './features/posts/pages/CreatePost'
 import Nav from './features/shared/components/Nav'
-import Profile from './features/shared/components/Profile'
+import Profile from './features/user/pages/Profile'
 
 const AppRoutes = () => {
     return (

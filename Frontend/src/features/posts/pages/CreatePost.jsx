@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/createPost.scss";
-import api from "../../../utils/api";
+import { usePost } from "../hook/usePost";
 
 const CreatePost = () => {
 
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-
+  const { handleCreatePost, loading } = usePost();
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-
     if (!file) return;
 
     setImage(file);
@@ -31,27 +29,14 @@ const CreatePost = () => {
     }
 
     try {
-      setLoading(true);
+      const formData = new FormData();
+      formData.append("caption", caption);
+      formData.append("imgUrl", image);
 
-        const formData = new FormData();
-        formData.append("caption", caption);
-        formData.append("imgUrl", image); // MUST match backend
+      await handleCreatePost(formData);
 
-
-        await api.post(
-          "/posts/create",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
-          }
-        );
-
-      // Navigate after success
       navigate("/feed");
 
-      // reset after success
       setCaption("");
       setImage(null);
       setPreview(null);
@@ -61,8 +46,6 @@ const CreatePost = () => {
     } catch (error) {
       console.error("Create post error:", error.response?.data || error.message);
       alert("Failed to create post");
-    } finally {
-      setLoading(false);
     }
   };
 
