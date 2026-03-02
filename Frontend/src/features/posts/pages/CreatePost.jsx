@@ -37,16 +37,16 @@ const CreatePost = () => {
         formData.append("caption", caption);
         formData.append("imgUrl", image); // MUST match backend
 
-      await api.post(
-        "/posts/create",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data"
+
+        await api.post(
+          "/posts/create",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
           }
-        }
-      );
+        );
 
       // Navigate after success
       navigate("/feed");

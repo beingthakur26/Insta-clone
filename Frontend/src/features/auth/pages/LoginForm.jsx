@@ -15,17 +15,27 @@ const LoginForm = () => {
     return <div>Loading...</div>;
   }
 
-  const handleFormSubmit = (e) => {
+  // const handleFormSubmit = (e) => {
+  //   e.preventDefault();
+  //   handleLogin(email, password)
+  //     .then((res) => {
+  //       // Login successful, you can redirect the user or show a success message
+  //       console.log("Login successful", res);
+  //       navigate("/feed"); // Redirect to feed page after successful login
+  //     })
+  //     .catch((error) => {
+  //       console.error("Login failed:", error);
+  //     });
+  // };
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    handleLogin(email, password)
-      .then((res) => {
-        // Login successful, you can redirect the user or show a success message
-        console.log("Login successful", res);
-        navigate("/feed"); // Redirect to feed page after successful login
-      })
-      .catch((error) => {
-        console.error("Login failed:", error);
-      });
+
+    try {
+      await handleLogin(email, password);
+      navigate("/feed");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (

@@ -16,9 +16,11 @@ export const usePost = () => {
     setLoading(true);
     try {
       const data = await getFeed();
-      setFeed(data.posts); // backend returns { posts: [...] }
+      setFeed(data.posts);
+      return data; // ✅ return like auth
     } catch (error) {
       console.error("Error fetching feed:", error);
+      throw error;
     } finally {
       setLoading(false);
     }

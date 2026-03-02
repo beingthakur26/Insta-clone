@@ -7,7 +7,7 @@ export const PostContextProvider = ({ children }) => {
 
     const [loading, setLoading] = useState(false);
     const [post, setPost] = useState(null);
-    const [feed, setFeed] = useState(null);
+    const [feed, setFeed] = useState([]); // ✅ FIXED
 
     const value = {
         loading,
@@ -24,4 +24,3 @@ export const PostContextProvider = ({ children }) => {
         </PostContext.Provider>
     );
 }
-

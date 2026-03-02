@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from "react";
 import "../profile.scss";
 import api from "../../../utils/api";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 const Profile = () => {
+
+  const { user } = useAuth();
 
   const [userData, setUserData] = useState(null);
   const [requests, setRequests] = useState([]);
@@ -16,73 +19,43 @@ const Profile = () => {
   const [newImage, setNewImage] = useState(null);
 
   const fetchAll = async () => {
-    const profile = await api.get(
-      "/auth/get-me",
-      { withCredentials: true }
-    );
 
-    setUserData(profile.data);
-    setNewUsername(profile.data.user);
-    setNewBio(profile.data.bio || "");
+    if (!user) return;
 
-    const reqRes = await api.get(
-      "/users/requests",
-      { withCredentials: true }
-    );
+    setUserData(user);
+    setNewUsername(user.user);
+    setNewBio(user.bio || "");
 
+    const reqRes = await api.get("/users/requests");
     setRequests(reqRes.data.requests);
 
-    const followingRes = await api.get(
-      "/users/following",
-      { withCredentials: true }
-    );
-
+    const followingRes = await api.get("/users/following");
     setFollowing(followingRes.data.following);
 
-    const suggestedRes = await api.get(
-      "/users/suggested",
-      { withCredentials: true }
-    );
-
+    const suggestedRes = await api.get("/users/suggested");
     setSuggested(suggestedRes.data.users);
   };
 
   useEffect(() => {
     fetchAll();
-  }, []);
+  }, [user]);
 
   const handleAction = async (type, username) => {
 
     if (type === "accept") {
-      await api.patch(
-        `/users/follow/status/${username}`,
-        { status: "accepted" },
-        { withCredentials: true }
-      );
+      await api.patch(`/users/follow/status/${username}`, { status: "accepted" });
     }
 
     if (type === "reject") {
-      await api.patch(
-        `/users/follow/status/${username}`,
-        { status: "rejected" },
-        { withCredentials: true }
-      );
+      await api.patch(`/users/follow/status/${username}`, { status: "rejected" });
     }
 
     if (type === "unfollow") {
-      await api.post(
-        `/users/unfollow/${username}`,
-        {},
-        { withCredentials: true }
-      );
+      await api.post(`/users/unfollow/${username}`);
     }
 
     if (type === "follow") {
-      await api.post(
-        `/users/follow/${username}`,
-        {},
-        { withCredentials: true }
-      );
+      await api.post(`/users/follow/${username}`);
     }
 
     fetchAll();
@@ -94,11 +67,7 @@ const Profile = () => {
     formData.append("bio", newBio);
     if (newImage) formData.append("profileImage", newImage);
 
-    await api.patch(
-      "/users/update-profile",
-      formData,
-      { withCredentials: true }
-    );
+    await api.patch("/users/update-profile", formData);
 
     setEditMode(false);
     fetchAll();
@@ -108,10 +77,8 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-
       <div className="profile-grid">
 
-        {/* LEFT SIDE */}
         <div className="profile-card">
 
           <div className="profile-image-wrapper">
@@ -152,7 +119,6 @@ const Profile = () => {
 
         </div>
 
-        {/* RIGHT SIDE */}
         <div className="profile-sidebar">
 
           <Section
@@ -198,7 +164,6 @@ const Profile = () => {
         </div>
 
       </div>
-
     </div>
   );
 };
