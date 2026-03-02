@@ -1,6 +1,6 @@
 const app = require('./src/app')
 const connectDb = require('./src/config/database')
-require('dotenv').config()
+// require('dotenv').config()
 
 // Establish MongoDB connection before handling requests
 connectDb()

@@ -3,55 +3,136 @@ const JWT = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
 const registerController = async (req, res) => {
+  try {
+    const { user, email, password, bio, profileImage } = req.body;
 
-    const { user, email, password, bio, profileImage } = req.body
-
-    // Check if username OR email already exists in database
-    const isUserAlreadyExist = await userModel.findOne({ 
-        $or: [
-            { user },
-            { email }
-        ] 
-    })
-
-    // Stop registration if duplicate found
-    if (isUserAlreadyExist) {
-        return res.status(409).json({ 
-            message: "User already exists" + 
-                (isUserAlreadyExist.email ? " with this email" : " with this username")
-        })
+    // 🔹 Basic validation
+    if (!user || !email || !password) {
+      return res.status(400).json({
+        message: "User, email and password are required"
+      });
     }
 
-    // Hash password before saving (never store plain password)
-    const hash = await bcrypt.hash(password, 10)
+    // 🔹 Check if user already exists (by username OR email)
+    const isUserAlreadyExist = await userModel.findOne({
+      $or: [
+        { user: user },
+        { email: email }
+      ]
+    });
 
-    // Create user with hashed password
+    if (isUserAlreadyExist) {
+      return res.status(409).json({
+        message: "User already exists"
+      });
+    }
+
+    // 🔹 Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 🔹 Create user
     const newUser = await userModel.create({
-        user,
-        email,
-        password: hash,
-        bio,
-        profileImage
-    })
+      user,
+      email,
+      password: hashedPassword,
+      bio: bio || "",
+      profileImage: profileImage || ""
+    });
 
-    // Generate JWT token for authentication (valid 1 day)
-    const token = JWT.sign({ 
+    // 🔹 Ensure JWT secret exists
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is missing in environment variables");
+      return res.status(500).json({
+        message: "Server configuration error"
+      });
+    }
+
+    // 🔹 Generate token
+    const token = JWT.sign(
+      {
         id: newUser._id,
         username: newUser.user
-    }, process.env.JWT_SECRET, { expiresIn: '1d' })
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-    // Store token in cookie for future requests
-    res.cookie('token', token)
+    // 🔹 Set cookie (works in production + localhost)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    });
 
-    // Send user data (never send password)
-    res.status(201).json({ 
-        message: "User registered successfully",
-        email : newUser.email,
-        user : newUser.user,
-        bio : newUser.bio,
-        profileImage : newUser.profileImage
-     })
-}
+    // 🔹 Send response (never send password)
+    return res.status(201).json({
+      message: "User registered successfully",
+      email: newUser.email,
+      user: newUser.user,
+      bio: newUser.bio,
+      profileImage: newUser.profileImage
+    });
+
+  } catch (error) {
+    console.error("Register error:", error);
+    return res.status(500).json({
+      message: "Something went wrong"
+    });
+  }
+};
+
+// const registerController = async (req, res) => {
+
+//     const { user, email, password, bio, profileImage } = req.body
+
+//     // Check if username OR email already exists in database
+//     const isUserAlreadyExist = await userModel.findOne({ 
+//         $or: [
+//             { user },
+//             { email }
+//         ] 
+//     })
+
+//     // Stop registration if duplicate found
+//     if (isUserAlreadyExist) {
+//         return res.status(409).json({ 
+//             message: "User already exists" + 
+//                 (isUserAlreadyExist.email ? " with this email" : " with this username")
+//         })
+//     }
+
+//     // Hash password before saving (never store plain password)
+//     const hash = await bcrypt.hash(password, 10)
+
+//     // Create user with hashed password
+//     const newUser = await userModel.create({
+//         user,
+//         email,
+//         password: hash,
+//         bio,
+//         profileImage
+//     })
+
+//     // Generate JWT token for authentication (valid 1 day)
+//     const token = JWT.sign({ 
+//         id: newUser._id,
+//         username: newUser.user
+//     }, process.env.JWT_SECRET, { expiresIn: '1d' })
+
+//     console.log("JWT_SECRET:", process.env.JWT_SECRET)
+
+//     // Store token in cookie for future requests
+//     res.cookie('token', token)
+
+//     // Send user data (never send password)
+//     res.status(201).json({ 
+//         message: "User registered successfully",
+//         email : newUser.email,
+//         user : newUser.user,
+//         bio : newUser.bio,
+//         profileImage : newUser.profileImage
+//      })
+// }
 
 const loginController = async (req, res) => {
 
