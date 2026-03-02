@@ -1,0 +1,20 @@
+/* Reset basic spacing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Make full app dark */
+html, body, #root {
+  height: 100%;
+  background-color: #0d0d0d; // softer than pure black
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Optional: smooth text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

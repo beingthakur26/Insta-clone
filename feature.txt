@@ -1,0 +1,16 @@
+Authentication 
+    - Regsiter
+    - Login
+    - Logout ( token blacklisting )
+    - Advance ( OTP based login )
+
+POST 
+    - create a port
+    - can see a feed
+    - like a post ( collection types )
+    - save post ion collection 
+
+Users
+    - following
+    - follower
+

@@ -1,0 +1,152 @@
+.feed {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: #0d0d0d;
+  min-height: 100vh;
+}
+
+.posts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.post {
+  width: 300px;
+  height: fit-content;
+  background: #151515;
+  border: 1px solid #262626;
+  border-radius: 14px;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  &__avatar-wrapper {
+    padding: 2px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 45deg,
+      #ff6600,
+      #690080,
+      #ff6600
+    );
+  }
+
+  &__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__username {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+
+  &__imageWrapper {
+    width: 100%;
+    background: black;
+  }
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__icons {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+    margin-top: 6px;
+
+    .left {
+      display: flex;
+      gap: 16px;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+
+      svg {
+        width: 20px;
+        height: 20px;
+        color: white;
+        transition: transform 0.2s ease, color 0.2s ease;
+      }
+
+      &:hover svg {
+        transform: scale(1.15);
+      }
+    }
+
+    .like.active {
+      color: #ff3040;
+    }
+  }
+
+  &__caption {
+    margin-top: 10px;
+    padding: 0 14px 16px;
+    font-size: 13px;
+    display: flex;
+    gap: 6px;
+    line-height: 1.5;
+  }
+
+  &__text {
+    color: #d0d0d0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .post {
+    width: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .posts {
+    gap: 18px;
+  }
+
+  .post {
+    width: 90%;
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 480px) {
+  .feed {
+    padding: 25px 10px;
+  }
+
+  .post {
+    width: 100%;
+    border-radius: 10px;
+  }
+}

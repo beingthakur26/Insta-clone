@@ -1,0 +1,99 @@
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../style/createPost.scss";
+
+const CreatePost = () => {
+
+  const [caption, setCaption] = useState("");
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!caption || !image) {
+      alert("Caption and Image required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+        const formData = new FormData();
+        formData.append("caption", caption);
+        formData.append("imgUrl", image); // MUST match backend
+
+      await axios.post(
+        "http://localhost:3000/api/posts/create",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+
+      // Navigate after success
+      navigate("/feed");
+
+      // reset after success
+      setCaption("");
+      setImage(null);
+      setPreview(null);
+
+      alert("Post created successfully");
+
+    } catch (error) {
+      console.error("Create post error:", error.response?.data || error.message);
+      alert("Failed to create post");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="create-post-container">
+      <form onSubmit={handleSubmit} className="create-post-form">
+
+        <h2>Create Post</h2>
+
+        {preview && (
+          <img src={preview} alt="preview" className="image-preview" />
+        )}
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+
+        <textarea
+          placeholder="Write a caption..."
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
+        />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Posting..." : "Share"}
+        </button>
+
+      </form>
+    </div>
+  );
+};
+
+export default CreatePost;

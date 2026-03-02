@@ -1,0 +1,75 @@
+$bg: #0d0d0d;
+$card: #121212;
+$border: #262626;
+$text: #ffffff;
+$primary: #0095f6;
+
+.auth {
+  height: 100vh;
+  background: $bg;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+
+  &__card {
+    background: $card;
+    border: 1px solid $border;
+    padding: 40px;
+    width: 350px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  &__logo {
+    font-size: 40px;
+    color: $text;
+    margin-bottom: 30px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    input {
+      padding: 10px;
+      background: #1a1a1a;
+      border: 1px solid $border;
+      border-radius: 4px;
+      color: $text;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+      }
+    }
+
+    button {
+      background: $primary;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+
+  &__switch {
+    margin-top: 20px;
+    background: $card;
+    border: 1px solid $border;
+    padding: 20px;
+    width: 350px;
+    text-align: center;
+    color: $text;
+
+    a {
+      color: $primary;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  }
+}
