@@ -5,13 +5,16 @@ const cors = require('cors')
 const app = express()
 
 // 🔥 CORS MUST COME FIRST
+console.log("CORS CONFIG LOADED")
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://insta-clone-frontend-ov60.onrender.com"
-  ],
+  origin: true,
   credentials: true
 }))
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // THEN middlewares
 app.use(express.json())
